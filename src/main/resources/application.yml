@@ -20,6 +20,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
   banner:
     charset: UTF-8
     location: classpath:banner.txt
@@ -34,9 +35,10 @@ server:
     max-http-post-size: 1024
     buffer-size: 1024
     direct-buffers: true
+  http2:
+    enabled: true
 logging:
   level:
     root: info
-    org: warn
     com:
       philcode: debug
