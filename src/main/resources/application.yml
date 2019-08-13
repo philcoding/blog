@@ -20,3 +20,23 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  banner:
+    charset: UTF-8
+    location: classpath:banner.txt
+server:
+  port: 8081
+  undertow:
+    accesslog:
+      enabled: true
+      dir: logs
+    io-threads: 1
+    worker-threads: 8
+    max-http-post-size: 1024
+    buffer-size: 1024
+    direct-buffers: true
+logging:
+  level:
+    root: info
+    org: warn
+    com:
+      philcode: debug
