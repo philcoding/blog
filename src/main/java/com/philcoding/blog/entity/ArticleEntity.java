@@ -26,7 +26,7 @@ public class ArticleEntity {
      * 内容Hash，用于校验文章内容是否重复
      */
     @Column(name = "content_hash", nullable = false, length = 64, unique = true)
-    private Integer contentHash;
+    private String contentHash;
 
     public Long getId() {
         return id;
@@ -44,11 +44,11 @@ public class ArticleEntity {
         this.content = content;
     }
 
-    public Integer getContentHash() {
+    public String getContentHash() {
         return contentHash;
     }
 
-    public void setContentHash(Integer contentHash) {
+    public void setContentHash(String contentHash) {
         this.contentHash = contentHash;
     }
 
