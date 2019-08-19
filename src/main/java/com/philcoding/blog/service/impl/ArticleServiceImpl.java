@@ -1,6 +1,8 @@
 package com.philcoding.blog.service.impl;
 
 import com.philcoding.blog.entity.ArticleEntity;
+import com.philcoding.blog.model.dto.ArticleDTO;
+import com.philcoding.blog.model.mapper.ArticleMapper;
 import com.philcoding.blog.repository.ArticleRepository;
 import com.philcoding.blog.service.ArticleService;
 import com.philcoding.blog.util.HashUtil;
@@ -13,14 +15,18 @@ import org.springframework.util.StringUtils;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final ArticleMapper articleMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
+    public ArticleServiceImpl(ArticleRepository articleRepository,
+                              ArticleMapper articleMapper) {
+
         this.articleRepository = articleRepository;
+        this.articleMapper = articleMapper;
     }
 
     @Override
     @Transactional
-    public ArticleEntity create(String content) {
+    public ArticleDTO create(String content) {
 
         if (!StringUtils.hasText(content)) {
             // throw exception
@@ -31,7 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         ArticleEntity article = articleRepository.findByContentHash(hashContent);
         if (article != null) {
-            return article;
+            return articleMapper.from(article);
         }
 
         long articleId = IdUtil.nextId();
@@ -41,6 +47,8 @@ public class ArticleServiceImpl implements ArticleService {
         articleEntity.setId(articleId);
         articleEntity.setContent(content);
 
-        return articleRepository.save(articleEntity);
+        articleRepository.save(articleEntity);
+
+        return articleMapper.from(articleEntity);
     }
 }

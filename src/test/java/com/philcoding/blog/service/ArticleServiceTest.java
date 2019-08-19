@@ -1,5 +1,6 @@
 package com.philcoding.blog.service;
 
+import com.philcoding.blog.model.dto.ArticleDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.Assert;
@@ -21,6 +22,9 @@ public class ArticleServiceTest {
 
         String content = "如果有值，则对其执行调用mapping。";
 
-        Assert.assertNotNull("创建失败", articleService.create(content));
+        ArticleDTO article = articleService.create(content);
+
+        Assert.assertNotNull("创建失败", article);
+        Assert.assertNotNull("创建失败", article.getId());
     }
 }
