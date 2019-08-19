@@ -53,6 +53,22 @@ public class IdUtil {
         return nextId(System.currentTimeMillis() / 1000);
     }
 
+    public static long toLongId(String stringId) {
+        // a stringId id is composed as timestamp (15) + uuid (32) + serverId (000~fff).
+        Matcher matcher = PATTERN_LONG_ID.matcher(stringId);
+        if (matcher.matches()) {
+            long epoch = Long.parseLong(matcher.group(1)) / 1000;
+
+            String uuid = matcher.group(2);
+            byte[] sha1 = HashUtil.sha1AsBytes(uuid);
+            long next = ((sha1[0] << 24) | (sha1[1] << 16) | (sha1[2] << 8) | sha1[3]) & MAX_NEXT;
+
+            long serverId = Long.parseLong(matcher.group(3), 16);
+            return generateId(epoch, next, serverId);
+        }
+        throw new IllegalArgumentException("Invalid id: " + stringId);
+    }
+
     private static synchronized long nextId(long epochSecond) {
         if (epochSecond < lastEpoch) {
             // warning: clock is turn back:
@@ -95,21 +111,5 @@ public class IdUtil {
             logger.warn("unable to get host name. set server id = 0.");
         }
         return 0;
-    }
-
-    public static long stringIdToLongId(String stringId) {
-        // a stringId id is composed as timestamp (15) + uuid (32) + serverId (000~fff).
-        Matcher matcher = PATTERN_LONG_ID.matcher(stringId);
-        if (matcher.matches()) {
-            long epoch = Long.parseLong(matcher.group(1)) / 1000;
-
-            String uuid = matcher.group(2);
-            byte[] sha1 = HashUtil.sha1AsBytes(uuid);
-            long next = ((sha1[0] << 24) | (sha1[1] << 16) | (sha1[2] << 8) | sha1[3]) & MAX_NEXT;
-
-            long serverId = Long.parseLong(matcher.group(3), 16);
-            return generateId(epoch, next, serverId);
-        }
-        throw new IllegalArgumentException("Invalid id: " + stringId);
     }
 }

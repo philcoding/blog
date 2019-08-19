@@ -1,7 +1,5 @@
 package com.philcoding.blog.util;
 
-import java.util.regex.Pattern;
-
 /**
  * Utility class for bytes.
  *
@@ -11,17 +9,6 @@ public class ByteUtil {
 
     private static final String HEX_STRING = "0123456789abcdef";
     private static final char[] HEX_CHARS = HEX_STRING.toCharArray();
-
-    private static final Pattern PATTERN_SHA1 = Pattern.compile("^[a-f0-9]{40}$");
-    private static final Pattern PATTERN_SHA256 = Pattern.compile("^[a-f0-9]{64}$");
-
-    public static boolean isSha1(String s) {
-        return PATTERN_SHA1.matcher(s).matches();
-    }
-
-    public static boolean isSha256(String s) {
-        return PATTERN_SHA256.matcher(s).matches();
-    }
 
     /**
      * Convert bytes to hex string (all lower-case).
@@ -62,7 +49,7 @@ public class ByteUtil {
         return toHex(c1, c2);
     }
 
-    public static byte[] toHexByteArray(String s) {
+    public static byte[] toHexBytes(String s) {
         if (s.length() % 2 == 1) {
             throw new IllegalArgumentException("Invalid length of string.");
         }
