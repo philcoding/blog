@@ -1,32 +1,30 @@
-package com.philcoding.blog.service.impl;
+package com.philcoding.blog.manager.impl;
 
 import com.philcoding.blog.entity.ArticleEntity;
-import com.philcoding.blog.model.dto.ArticleDTO;
-import com.philcoding.blog.model.mapper.ArticleMapper;
+import com.philcoding.blog.manager.ArticleManager;
+import com.philcoding.blog.model.article.ArticleDTO;
+import com.philcoding.blog.model.article.ArticleDTOMapper;
 import com.philcoding.blog.repository.ArticleRepository;
-import com.philcoding.blog.service.ArticleService;
 import com.philcoding.blog.util.HashUtil;
 import com.philcoding.blog.util.IdUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class ArticleManagerImpl implements ArticleManager {
 
     private final ArticleRepository articleRepository;
-    private final ArticleMapper articleMapper;
+    private final ArticleDTOMapper articleDTOMapper;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository,
-                              ArticleMapper articleMapper) {
+    public ArticleManagerImpl(ArticleRepository articleRepository,
+                              ArticleDTOMapper articleDTOMapper) {
 
         this.articleRepository = articleRepository;
-        this.articleMapper = articleMapper;
+        this.articleDTOMapper = articleDTOMapper;
     }
 
     @Override
-    @Transactional
-    public ArticleDTO create(String content) {
+    public ArticleDTO createOrGet(String content) {
 
         if (!StringUtils.hasText(content)) {
             return null;
@@ -47,6 +45,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleRepository.save(articleEntity);
         }
 
-        return articleMapper.from(articleEntity);
+        return articleDTOMapper.from(articleEntity);
     }
 }

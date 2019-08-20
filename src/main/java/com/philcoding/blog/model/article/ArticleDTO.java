@@ -1,4 +1,4 @@
-package com.philcoding.blog.model.dto;
+package com.philcoding.blog.model.article;
 
 public class ArticleDTO {
 

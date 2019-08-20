@@ -1,9 +1,9 @@
-package com.philcoding.blog.service;
+package com.philcoding.blog.manager;
 
-import com.philcoding.blog.model.dto.ArticleDTO;
+import com.philcoding.blog.model.article.ArticleDTO;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -12,17 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class ArticleServiceTest {
+public class ArticleManagerTest {
 
     @Autowired
-    ArticleService articleService;
+    ArticleManager articleManager;
 
     @Test
-    public void testCreate() {
+    public void createOrGet() {
 
         String content = "如果有值，则对其执行调用mapping。";
 
-        ArticleDTO article = articleService.create(content);
+        ArticleDTO article = articleManager.createOrGet(content);
 
         Assert.assertNotNull("创建失败", article);
         Assert.assertNotNull("创建失败", article.getId());
