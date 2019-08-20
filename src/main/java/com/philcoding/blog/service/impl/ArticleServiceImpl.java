@@ -29,25 +29,23 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO create(String content) {
 
         if (!StringUtils.hasText(content)) {
-            // throw exception
             return null;
         }
 
         String hashContent = HashUtil.sha256(content);
 
-        ArticleEntity article = articleRepository.findByContentHash(hashContent);
-        if (article != null) {
-            return articleMapper.from(article);
+        ArticleEntity articleEntity = articleRepository.findByContentHash(hashContent);
+        if (articleEntity == null) {
+
+            long articleId = IdUtil.nextId();
+
+            articleEntity = new ArticleEntity();
+            articleEntity.setContentHash(hashContent);
+            articleEntity.setId(articleId);
+            articleEntity.setContent(content);
+
+            articleRepository.save(articleEntity);
         }
-
-        long articleId = IdUtil.nextId();
-
-        ArticleEntity articleEntity = new ArticleEntity();
-        articleEntity.setContentHash(hashContent);
-        articleEntity.setId(articleId);
-        articleEntity.setContent(content);
-
-        articleRepository.save(articleEntity);
 
         return articleMapper.from(articleEntity);
     }
