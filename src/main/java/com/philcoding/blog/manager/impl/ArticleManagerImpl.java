@@ -3,7 +3,6 @@ package com.philcoding.blog.manager.impl;
 import com.philcoding.blog.entity.ArticleEntity;
 import com.philcoding.blog.manager.ArticleManager;
 import com.philcoding.blog.model.article.ArticleDTO;
-import com.philcoding.blog.model.article.ArticleDTOMapper;
 import com.philcoding.blog.repository.ArticleRepository;
 import com.philcoding.blog.util.HashUtil;
 import com.philcoding.blog.util.IdUtil;
@@ -14,13 +13,10 @@ import org.springframework.util.StringUtils;
 public class ArticleManagerImpl implements ArticleManager {
 
     private final ArticleRepository articleRepository;
-    private final ArticleDTOMapper articleDTOMapper;
 
-    public ArticleManagerImpl(ArticleRepository articleRepository,
-                              ArticleDTOMapper articleDTOMapper) {
+    public ArticleManagerImpl(ArticleRepository articleRepository) {
 
         this.articleRepository = articleRepository;
-        this.articleDTOMapper = articleDTOMapper;
     }
 
     @Override
@@ -45,6 +41,6 @@ public class ArticleManagerImpl implements ArticleManager {
             articleRepository.save(articleEntity);
         }
 
-        return articleDTOMapper.from(articleEntity);
+        return ArticleDTO.from(articleEntity);
     }
 }

@@ -1,5 +1,7 @@
 package com.philcoding.blog.model.article;
 
+import com.philcoding.blog.entity.ArticleEntity;
+
 public class ArticleDTO {
 
     /**
@@ -26,6 +28,33 @@ public class ArticleDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    /**
+     * 实例化对象
+     *
+     * @return ArticleDTO
+     */
+    public static ArticleDTO getInstance() {
+        return new ArticleDTO();
+    }
+
+    /**
+     * 实体 转换为 DTO
+     * @param articleEntity 文章实体
+     * @return ArticleDTO
+     */
+    public static ArticleDTO from(ArticleEntity articleEntity) {
+        if ( articleEntity == null ) {
+            return null;
+        }
+
+        ArticleDTO articleDTO = getInstance();
+
+        articleDTO.setId( articleEntity.getId() );
+        articleDTO.setContent( articleEntity.getContent() );
+
+        return articleDTO;
     }
 
     @Override

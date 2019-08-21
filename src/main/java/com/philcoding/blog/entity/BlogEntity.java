@@ -23,6 +23,12 @@ public class BlogEntity {
     private String title;
 
     /**
+     * 标题Hash，用于校验博文标题是否重复
+     */
+    @Column(name = "title_hash", nullable = false, length = 64, unique = true)
+    private String titleHash;
+
+    /**
      * 关键字
      */
     @Column(name = "keywords", nullable = false, length = 100)
@@ -39,6 +45,13 @@ public class BlogEntity {
      */
     @Column(name = "tags", nullable = false, length = 100)
     private String tags;
+
+    /**
+     * 博文状态
+     * 0 未发布，1 已发布，2 已锁定
+     */
+    @Column(name = "status", nullable = false)
+    private int status;
 
     /**
      * 发布时间
@@ -80,6 +93,14 @@ public class BlogEntity {
         this.title = title;
     }
 
+    public String getTitleHash() {
+        return titleHash;
+    }
+
+    public void setTitleHash(String titleHash) {
+        this.titleHash = titleHash;
+    }
+
     public String getKeywords() {
         return keywords;
     }
@@ -102,6 +123,14 @@ public class BlogEntity {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public Long getPublishedAt() {
@@ -141,9 +170,11 @@ public class BlogEntity {
         return "BlogEntity{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", titleHash='" + titleHash + '\'' +
                 ", keywords='" + keywords + '\'' +
                 ", description='" + description + '\'' +
                 ", tags='" + tags + '\'' +
+                ", status=" + status +
                 ", publishedAt=" + publishedAt +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
