@@ -14,7 +14,7 @@ public class ArticleEntity {
      */
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
+    private long id;
 
     /**
      * 内容详情
@@ -28,11 +28,11 @@ public class ArticleEntity {
     @Column(name = "content_hash", nullable = false, length = 64, unique = true)
     private String contentHash;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

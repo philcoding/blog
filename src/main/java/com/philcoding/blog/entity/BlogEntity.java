@@ -14,7 +14,7 @@ public class BlogEntity {
      */
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
+    private long id;
 
     /**
      * 标题
@@ -57,31 +57,31 @@ public class BlogEntity {
      * 发布时间
      */
     @Column(name = "published_at", nullable = false)
-    private Long publishedAt;
+    private long publishedAt;
 
     /**
      * 创建时间
      */
     @Column(name = "created_at", nullable = false)
-    private Long createdAt;
+    private long createdAt;
 
     /**
      * 更新时间
      */
     @Column(name = "updated_at", nullable = false)
-    private Long updatedAt;
+    private long updatedAt;
 
     /**
      * 文章ID
      */
     @Column(name = "article_id", nullable = false)
-    private Long articleId;
+    private long articleId;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -133,23 +133,23 @@ public class BlogEntity {
         this.status = status;
     }
 
-    public Long getPublishedAt() {
+    public long getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Long publishedAt) {
+    public void setPublishedAt(long publishedAt) {
         this.publishedAt = publishedAt;
     }
 
-    public Long getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Long createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Long getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
@@ -157,11 +157,11 @@ public class BlogEntity {
         this.updatedAt = updatedAt;
     }
 
-    public Long getArticleId() {
+    public long getArticleId() {
         return articleId;
     }
 
-    public void setArticleId(Long articleId) {
+    public void setArticleId(long articleId) {
         this.articleId = articleId;
     }
 

@@ -8,5 +8,5 @@ public interface BlogService {
 
     BlogDTO update(BlogDTO blogDTO);
 
-    BlogDTO delete(Long blogId);
+    void delete(Long blogId);
 }

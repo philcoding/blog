@@ -45,10 +45,13 @@ public class BlogController {
 
     @PutMapping(path = "/{blog_id}")
     @ResponseBody
-    public ResponseEntity<BlogDTO> update(@PathVariable("blog_id") Long blogId, CreateQuery createQuery) {
+    public ResponseEntity<BlogDTO> update(@PathVariable("blog_id") Long blogId,
+                                          CreateQuery createQuery) {
 
         BlogDTO blogDTO = BlogDTO.from(createQuery);
         blogDTO.setBlogId(blogId);
+
+        blogDTO = blogService.update(blogDTO);
 
         return ResponseEntity.ok(blogDTO);
     }
@@ -56,6 +59,9 @@ public class BlogController {
     @DeleteMapping(path = "/{blog_id}")
     @ResponseBody
     public ResponseEntity<BlogDTO> delete(@PathVariable("blog_id") Long blogId) {
+
+        blogService.delete(blogId);
+
         return ResponseEntity.noContent().build();
     }
 }

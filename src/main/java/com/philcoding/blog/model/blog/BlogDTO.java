@@ -14,7 +14,7 @@ public class BlogDTO {
     /**
      * 多标签间分隔符
      */
-    public final String TAG_SEPARATOR = "|";
+    public static final String TAG_SEPARATOR = ",";
 
     /**
      * 博文ID
@@ -111,17 +111,15 @@ public class BlogDTO {
         return new BlogDTO();
     }
 
-    public static BlogDTO from(BlogEntity blogEntity, ArticleDTO articleDTO) {
+    public static BlogDTO from(BlogEntity blogEntity) {
+
+        List<String> tags = Arrays.asList(blogEntity.getTags().split(TAG_SEPARATOR));
 
         BlogDTO blogDTO = getInstance();
-
-        List<String> tags = Arrays.asList(blogEntity.getTags().split(blogDTO.TAG_SEPARATOR));
-
         blogDTO.setBlogId(blogEntity.getId());
         blogDTO.setTitle(blogEntity.getTitle());
         blogDTO.setKeywords(blogEntity.getKeywords());
         blogDTO.setDescription(blogEntity.getDescription());
-        blogDTO.setContent(articleDTO.getContent());
         blogDTO.setTags(tags);
 
         if (blogEntity.getPublishedAt() > 0) {
@@ -136,10 +134,10 @@ public class BlogDTO {
     }
 
     public static BlogDTO from(CreateQuery createQuery) {
+
+        List<String> tags = Arrays.asList(createQuery.getTags().split(TAG_SEPARATOR));
+
         BlogDTO blogDTO = getInstance();
-
-        List<String> tags = Arrays.asList(createQuery.getTags().split(blogDTO.TAG_SEPARATOR));
-
         blogDTO.setTitle(StringUtils.trimWhitespace(createQuery.getTitle()));
         blogDTO.setKeywords(StringUtils.trimWhitespace(createQuery.getKeywords()));
         blogDTO.setDescription(StringUtils.trimWhitespace(createQuery.getDescription()));
