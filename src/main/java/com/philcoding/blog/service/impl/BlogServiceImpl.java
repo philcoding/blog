@@ -8,14 +8,20 @@ import com.philcoding.blog.exception.UpdateFailureException;
 import com.philcoding.blog.manager.ArticleManager;
 import com.philcoding.blog.model.article.ArticleDTO;
 import com.philcoding.blog.model.blog.BlogDTO;
+import com.philcoding.blog.model.blog.BlogPageDTO;
+import com.philcoding.blog.model.pageable.PageDTO;
 import com.philcoding.blog.repository.BlogRepository;
 import com.philcoding.blog.service.BlogService;
 import com.philcoding.blog.util.HashUtil;
 import com.philcoding.blog.util.IdUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +40,48 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public BlogPageDTO findByPage(PageDTO pageDTO) {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
+        Pageable pageable = PageRequest.of(pageDTO.getPage(), pageDTO.getSize(), sort);
+        int publishStatus = StatusEnum.PUBLISHED.getCode();
+
+        Page<BlogEntity> blogEntityPage = blogRepository.findAllByStatus(publishStatus, pageable);
+
+        BlogPageDTO blogPageDTO = new BlogPageDTO();
+
+        if (blogEntityPage.hasContent()) {
+
+            List<BlogDTO> blogList = blogEntityPage.getContent().stream()
+                    .map(BlogDTO::from)
+                    .collect(Collectors.toList());
+
+            blogPageDTO.setBlogList(blogList);
+            blogPageDTO.setPageable(PageDTO.of(blogEntityPage));
+        }
+
+        return blogPageDTO;
+    }
+
+    @Override
+    public BlogDTO findById(Long blogId) {
+
+        Optional<BlogEntity> entity = blogRepository.findById(blogId);
+
+        return entity.filter(item -> item.getStatus() == StatusEnum.PUBLISHED.getCode())
+                .map(item -> {
+
+                    ArticleDTO articleDTO = articleManager.findById(item.getArticleId());
+
+                    BlogDTO blogDTO = BlogDTO.from(item);
+                    blogDTO.setContent(articleDTO.getContent());
+
+                    return blogDTO;
+
+                }).orElse(BlogDTO.empty());
+    }
+
+    @Override
     @Transactional
     public BlogDTO create(BlogDTO blogDTO) {
 
@@ -45,7 +93,7 @@ public class BlogServiceImpl implements BlogService {
             throw new CreateFailureException();
         }
 
-        long date = System.currentTimeMillis();
+        long date = Instant.now().getEpochSecond();
         String tags = convertTags(blogDTO.getTags());
         ArticleDTO articleDTO = articleManager.createOrGet(blogDTO.getContent());
 
@@ -63,10 +111,7 @@ public class BlogServiceImpl implements BlogService {
 
         blogRepository.save(blogEntity);
 
-        blogDTO.setBlogId(blogEntity.getId());
-        blogDTO.setDate(new Date(blogEntity.getUpdatedAt()));
-
-        return blogDTO;
+        return BlogDTO.from(blogEntity);
     }
 
     @Override
@@ -84,7 +129,7 @@ public class BlogServiceImpl implements BlogService {
         Optional<BlogEntity> entity = blogRepository.findById(blogDTO.getBlogId());
         blogEntity = entity.orElseThrow(UpdateFailureException::new);
 
-        long date = System.currentTimeMillis();
+        long date = Instant.now().getEpochSecond();
         String tags = convertTags(blogDTO.getTags());
         ArticleDTO articleDTO = articleManager.createOrGet(blogDTO.getContent());
 
@@ -100,16 +145,14 @@ public class BlogServiceImpl implements BlogService {
 
         blogRepository.save(blogEntity);
 
-        blogDTO.setDate(new Date(blogEntity.getPublishedAt()));
-
-        return blogDTO;
+        return BlogDTO.from(blogEntity);
     }
 
     @Override
     @Transactional
     public void delete(Long blogId) {
 
-        long updatedAt = System.currentTimeMillis();
+        long updatedAt = Instant.now().getEpochSecond();
         int updateCount = blogRepository.updateStatus(blogId, StatusEnum.LOCKED.getCode(), updatedAt);
 
         if (updateCount != 1) {

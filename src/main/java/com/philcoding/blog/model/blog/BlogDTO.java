@@ -1,12 +1,11 @@
 package com.philcoding.blog.model.blog;
 
-import com.philcoding.blog.entity.ArticleEntity;
 import com.philcoding.blog.entity.BlogEntity;
-import com.philcoding.blog.model.article.ArticleDTO;
+import com.philcoding.blog.util.DateTimeUtil;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class BlogDTO {
@@ -47,9 +46,74 @@ public class BlogDTO {
     private List<String> tags;
 
     /**
+     * 博文状态
+     * 0 未发布，1 已发布，2 已锁定
+     */
+    private int status;
+
+    /**
      * 发布时间
      */
-    private Date date;
+    private LocalDateTime publishedAt;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createdAt;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updatedAt;
+
+    public static BlogDTO getInstance() {
+        return new BlogDTO();
+    }
+
+    public static BlogDTO empty() {
+        return BlogDTO.getInstance();
+    }
+
+    public static BlogDTO from(BlogEntity blogEntity) {
+
+        List<String> tags = Arrays.asList(blogEntity.getTags().split(TAG_SEPARATOR));
+
+        BlogDTO blogDTO = getInstance();
+        blogDTO.setBlogId(blogEntity.getId());
+        blogDTO.setTitle(blogEntity.getTitle());
+        blogDTO.setKeywords(blogEntity.getKeywords());
+        blogDTO.setDescription(blogEntity.getDescription());
+        blogDTO.setStatus(blogEntity.getStatus());
+        blogDTO.setTags(tags);
+
+        if (blogEntity.getCreatedAt() > 0) {
+            blogDTO.setCreatedAt(DateTimeUtil.Of(blogEntity.getCreatedAt()));
+        }
+
+        if (blogEntity.getUpdatedAt() > 0) {
+            blogDTO.setUpdatedAt(DateTimeUtil.Of(blogEntity.getUpdatedAt()));
+        }
+
+        if (blogEntity.getPublishedAt() > 0) {
+            blogDTO.setPublishedAt(DateTimeUtil.Of(blogEntity.getPublishedAt()));
+        }
+
+        return blogDTO;
+    }
+
+    public static BlogDTO from(CreateQuery createQuery) {
+
+        List<String> tags = Arrays.asList(createQuery.getTags().split(TAG_SEPARATOR));
+
+        BlogDTO blogDTO = getInstance();
+        blogDTO.setTitle(StringUtils.trimWhitespace(createQuery.getTitle()));
+        blogDTO.setKeywords(StringUtils.trimWhitespace(createQuery.getKeywords()));
+        blogDTO.setDescription(StringUtils.trimWhitespace(createQuery.getDescription()));
+        blogDTO.setContent(createQuery.getContent());
+        blogDTO.setTags(tags);
+
+        return blogDTO;
+    }
 
     public Long getBlogId() {
         return blogId;
@@ -99,52 +163,36 @@ public class BlogDTO {
         this.tags = tags;
     }
 
-    public Date getDate() {
-        return date;
+    public int getStatus() {
+        return status;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public static BlogDTO getInstance(){
-        return new BlogDTO();
+    public LocalDateTime getPublishedAt() {
+        return publishedAt;
     }
 
-    public static BlogDTO from(BlogEntity blogEntity) {
-
-        List<String> tags = Arrays.asList(blogEntity.getTags().split(TAG_SEPARATOR));
-
-        BlogDTO blogDTO = getInstance();
-        blogDTO.setBlogId(blogEntity.getId());
-        blogDTO.setTitle(blogEntity.getTitle());
-        blogDTO.setKeywords(blogEntity.getKeywords());
-        blogDTO.setDescription(blogEntity.getDescription());
-        blogDTO.setTags(tags);
-
-        if (blogEntity.getPublishedAt() > 0) {
-            blogDTO.setDate(new Date(blogEntity.getPublishedAt()));
-        } else if (blogEntity.getUpdatedAt() > 0) {
-            blogDTO.setDate(new Date(blogEntity.getUpdatedAt()));
-        } else {
-            blogDTO.setDate(new Date(blogEntity.getCreatedAt()));
-        }
-
-        return blogDTO;
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
-    public static BlogDTO from(CreateQuery createQuery) {
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-        List<String> tags = Arrays.asList(createQuery.getTags().split(TAG_SEPARATOR));
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-        BlogDTO blogDTO = getInstance();
-        blogDTO.setTitle(StringUtils.trimWhitespace(createQuery.getTitle()));
-        blogDTO.setKeywords(StringUtils.trimWhitespace(createQuery.getKeywords()));
-        blogDTO.setDescription(StringUtils.trimWhitespace(createQuery.getDescription()));
-        blogDTO.setContent(createQuery.getContent());
-        blogDTO.setTags(tags);
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
-        return blogDTO;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -156,7 +204,10 @@ public class BlogDTO {
                 ", description='" + description + '\'' +
                 ", content='" + content + '\'' +
                 ", tags=" + tags +
-                ", date=" + date +
+                ", status=" + status +
+                ", publishedAt=" + publishedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

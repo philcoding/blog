@@ -9,14 +9,24 @@ import com.philcoding.blog.util.IdUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 @Service
 public class ArticleManagerImpl implements ArticleManager {
 
     private final ArticleRepository articleRepository;
 
     public ArticleManagerImpl(ArticleRepository articleRepository) {
-
         this.articleRepository = articleRepository;
+    }
+
+    @Override
+    public ArticleDTO findById(Long articleId) {
+
+        Optional<ArticleEntity> entity = articleRepository.findById(articleId);
+
+        return entity.map(ArticleDTO::from)
+                .orElse(ArticleDTO.empty());
     }
 
     @Override
