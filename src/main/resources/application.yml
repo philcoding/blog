@@ -24,6 +24,10 @@ spring:
   banner:
     charset: UTF-8
     location: classpath:banner.txt
+  thymeleaf:
+    cache: false
+  mvc:
+    static-path-pattern: "/static/**"
 server:
   port: 8081
   undertow:

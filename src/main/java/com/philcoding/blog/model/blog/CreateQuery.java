@@ -1,19 +1,22 @@
 package com.philcoding.blog.model.blog;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class CreateQuery {
 
     /**
      * 博文标题
      */
-    @NotNull
+    @NotBlank(message = "标题不能为空")
+    @Size(min = 4, max = 20, message = "标题的字数必须在4和20之间")
     private String title;
 
     /**
      * 博文内容
      */
-    @NotNull
+    @NotBlank(message = "内容不能为空")
+    @Size(min = 10, message = "内容的字数不能少于10")
     private String content;
 
     /**
@@ -31,7 +34,7 @@ public class CreateQuery {
      */
     private String tags;
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -39,7 +42,7 @@ public class CreateQuery {
         this.title = title;
     }
 
-    public String getContent() {
+    String getContent() {
         return content;
     }
 
@@ -47,7 +50,7 @@ public class CreateQuery {
         this.content = content;
     }
 
-    public String getKeywords() {
+    String getKeywords() {
         return keywords;
     }
 
@@ -55,7 +58,7 @@ public class CreateQuery {
         this.keywords = keywords;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
@@ -63,7 +66,7 @@ public class CreateQuery {
         this.description = description;
     }
 
-    public String getTags() {
+    String getTags() {
         return tags;
     }
 
