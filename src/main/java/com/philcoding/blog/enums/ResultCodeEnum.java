@@ -14,6 +14,8 @@ public enum ResultCodeEnum {
 
     LOGIC_UPDATE_ERROR(400020, "更新失败", "更新业务逻辑错误"),
     BLOG_TITLE_EXIST_UPDATE_ERROR(400021, "博文标题已存在，请确认", "更新博文业务逻辑错误"),
+    BLOG_PUBLISH_UPDATE_ERROR(400022, "博文发布失败", "更新博文业务逻辑错误"),
+    BLOG_UNPUBLISH_UPDATE_ERROR(400023, "博文取消发布失败", "更新博文业务逻辑错误"),
 
     LOGIC_DELETE_ERROR(400030, "删除失败", "删除业务逻辑错误");
 

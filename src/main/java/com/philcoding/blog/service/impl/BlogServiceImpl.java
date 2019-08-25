@@ -160,10 +160,34 @@ public class BlogServiceImpl implements BlogService {
     public void delete(Long blogId) {
 
         long updatedAt = Instant.now().toEpochMilli();
-        int updateCount = blogRepository.updateStatus(blogId, StatusEnum.LOCKED.code(), updatedAt);
+        int updateCount = blogRepository.lock(blogId, StatusEnum.LOCKED.code(), updatedAt);
 
         if (updateCount != 1) {
             throw new DeteleFailureException();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void publish(Long blogId) {
+
+        long publishedAt = Instant.now().toEpochMilli();
+        int updateCount = blogRepository.publish(blogId, StatusEnum.PUBLISHED.code(), publishedAt);
+
+        if (updateCount != 1) {
+            throw new UpdateFailureException(ResultCodeEnum.BLOG_PUBLISH_UPDATE_ERROR);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void unpublish(Long blogId) {
+
+        long updatedAt = Instant.now().toEpochMilli();
+        int updateCount = blogRepository.unpublish(blogId, StatusEnum.UNPUBLISHED.code(), updatedAt);
+
+        if (updateCount != 1) {
+            throw new UpdateFailureException(ResultCodeEnum.BLOG_UNPUBLISH_UPDATE_ERROR);
         }
     }
 

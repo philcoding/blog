@@ -72,7 +72,7 @@ public class BlogController {
     @PutMapping(path = "/{blog_id}")
     @ResponseBody
     public Result update(@PathVariable("blog_id") Long blogId,
-                                  @RequestBody @Validated CreateQuery createQuery) {
+                         @RequestBody @Validated CreateQuery createQuery) {
 
         BlogDTO blogDTO = BlogDTO.from(createQuery);
         blogDTO.setBlogId(blogId);
@@ -87,6 +87,24 @@ public class BlogController {
     public ResponseEntity delete(@PathVariable("blog_id") Long blogId) {
 
         blogService.delete(blogId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(path = "/{blog_id}/publish")
+    @ResponseBody
+    public ResponseEntity publish(@PathVariable("blog_id") Long blogId) {
+
+        blogService.publish(blogId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(path = "/{blog_id}/unpublish")
+    @ResponseBody
+    public ResponseEntity unpublish(@PathVariable("blog_id") Long blogId) {
+
+        blogService.unpublish(blogId);
 
         return ResponseEntity.noContent().build();
     }
