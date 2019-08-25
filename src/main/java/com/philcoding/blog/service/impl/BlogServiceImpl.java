@@ -44,7 +44,7 @@ public class BlogServiceImpl implements BlogService {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
         Pageable pageable = PageRequest.of(pageDTO.getPage(), pageDTO.getSize(), sort);
-        int publishStatus = StatusEnum.PUBLISHED.getCode();
+        int publishStatus = StatusEnum.PUBLISHED.code();
 
         Page<BlogEntity> blogEntityPage = blogRepository.findAllByStatus(publishStatus, pageable);
 
@@ -68,7 +68,7 @@ public class BlogServiceImpl implements BlogService {
 
         Optional<BlogEntity> entity = blogRepository.findById(blogId);
 
-        return entity.filter(item -> item.getStatus() == StatusEnum.PUBLISHED.getCode())
+        return entity.filter(item -> item.getStatus() == StatusEnum.PUBLISHED.code())
                 .map(item -> {
 
                     ArticleDTO articleDTO = articleManager.findById(item.getArticleId());
@@ -104,7 +104,7 @@ public class BlogServiceImpl implements BlogService {
         blogEntity.setKeywords(blogDTO.getKeywords());
         blogEntity.setDescription(blogDTO.getDescription());
         blogEntity.setTags(tags);
-        blogEntity.setStatus(StatusEnum.UNPUBLISHED.getCode());
+        blogEntity.setStatus(StatusEnum.UNPUBLISHED.code());
         blogEntity.setCreatedAt(date);
         blogEntity.setUpdatedAt(date);
         blogEntity.setArticleId(articleDTO.getId());
@@ -138,7 +138,7 @@ public class BlogServiceImpl implements BlogService {
         blogEntity.setKeywords(blogDTO.getKeywords());
         blogEntity.setDescription(blogDTO.getDescription());
         blogEntity.setTags(tags);
-        blogEntity.setStatus(StatusEnum.PUBLISHED.getCode());
+        blogEntity.setStatus(StatusEnum.PUBLISHED.code());
         blogEntity.setUpdatedAt(date);
         blogEntity.setPublishedAt(date);
         blogEntity.setArticleId(articleDTO.getId());
@@ -153,7 +153,7 @@ public class BlogServiceImpl implements BlogService {
     public void delete(Long blogId) {
 
         long updatedAt = Instant.now().getEpochSecond();
-        int updateCount = blogRepository.updateStatus(blogId, StatusEnum.LOCKED.getCode(), updatedAt);
+        int updateCount = blogRepository.updateStatus(blogId, StatusEnum.LOCKED.code(), updatedAt);
 
         if (updateCount != 1) {
             throw new DeteleFailureException();

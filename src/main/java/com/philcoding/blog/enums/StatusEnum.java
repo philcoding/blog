@@ -5,20 +5,20 @@ public enum StatusEnum {
     PUBLISHED(1, "已发布"),
     LOCKED(2, "已锁定");
 
-    private int code;
+    private final int code;
 
-    private String desc;
+    private final String desc;
 
     StatusEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public int getCode() {
+    public int code() {
         return code;
     }
 
-    public String getDesc() {
+    public String desc() {
         return desc;
     }
 }

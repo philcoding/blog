@@ -5,6 +5,7 @@ import com.philcoding.blog.util.DateTimeUtil;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,7 +77,9 @@ public class BlogDTO {
 
     public static BlogDTO from(BlogEntity blogEntity) {
 
-        List<String> tags = Arrays.asList(blogEntity.getTags().split(TAG_SEPARATOR));
+        List<String> tags = StringUtils.hasText(blogEntity.getTags())
+                ? Arrays.asList(blogEntity.getTags().split(TAG_SEPARATOR))
+                : new ArrayList<>();
 
         BlogDTO blogDTO = getInstance();
         blogDTO.setBlogId(blogEntity.getId());
@@ -103,7 +106,9 @@ public class BlogDTO {
 
     public static BlogDTO from(CreateQuery createQuery) {
 
-        List<String> tags = Arrays.asList(createQuery.getTags().split(TAG_SEPARATOR));
+        List<String> tags = StringUtils.hasText(createQuery.getTags())
+                ? Arrays.asList(createQuery.getTags().split(TAG_SEPARATOR))
+                : new ArrayList<>();
 
         BlogDTO blogDTO = getInstance();
         blogDTO.setTitle(StringUtils.trimWhitespace(createQuery.getTitle()));
