@@ -1,6 +1,7 @@
 package com.philcoding.blog.service.impl;
 
 import com.philcoding.blog.entity.BlogEntity;
+import com.philcoding.blog.enums.ResultCodeEnum;
 import com.philcoding.blog.enums.StatusEnum;
 import com.philcoding.blog.exception.CreateFailureException;
 import com.philcoding.blog.exception.DeteleFailureException;
@@ -90,10 +91,10 @@ public class BlogServiceImpl implements BlogService {
         // 根据博文标题，校验是否有重复博文
         BlogEntity blogEntity = blogRepository.findByTitleHash(titleHash);
         if (blogEntity != null) {
-            throw new CreateFailureException();
+            throw new CreateFailureException(ResultCodeEnum.BLOG_TITLE_EXIST_CREATE_ERROR);
         }
 
-        long date = Instant.now().getEpochSecond();
+        long date = Instant.now().toEpochMilli();
         String tags = convertTags(blogDTO.getTags());
         ArticleDTO articleDTO = articleManager.createOrGet(blogDTO.getContent());
 
@@ -111,7 +112,10 @@ public class BlogServiceImpl implements BlogService {
 
         blogRepository.save(blogEntity);
 
-        return BlogDTO.from(blogEntity);
+        blogDTO = BlogDTO.from(blogEntity);
+        blogDTO.setContent(articleDTO.getContent());
+
+        return blogDTO;
     }
 
     @Override
@@ -123,13 +127,13 @@ public class BlogServiceImpl implements BlogService {
         // 根据博文标题，校验是否有重复博文(除自身以外)
         BlogEntity blogEntity = blogRepository.findByTitleHash(titleHash);
         if (blogEntity != null && blogEntity.getId() != blogDTO.getBlogId()) {
-            throw new UpdateFailureException();
+            throw new UpdateFailureException(ResultCodeEnum.BLOG_TITLE_EXIST_UPDATE_ERROR);
         }
 
         Optional<BlogEntity> entity = blogRepository.findById(blogDTO.getBlogId());
         blogEntity = entity.orElseThrow(UpdateFailureException::new);
 
-        long date = Instant.now().getEpochSecond();
+        long date = Instant.now().toEpochMilli();
         String tags = convertTags(blogDTO.getTags());
         ArticleDTO articleDTO = articleManager.createOrGet(blogDTO.getContent());
 
@@ -145,14 +149,17 @@ public class BlogServiceImpl implements BlogService {
 
         blogRepository.save(blogEntity);
 
-        return BlogDTO.from(blogEntity);
+        blogDTO = BlogDTO.from(blogEntity);
+        blogDTO.setContent(articleDTO.getContent());
+
+        return blogDTO;
     }
 
     @Override
     @Transactional
     public void delete(Long blogId) {
 
-        long updatedAt = Instant.now().getEpochSecond();
+        long updatedAt = Instant.now().toEpochMilli();
         int updateCount = blogRepository.updateStatus(blogId, StatusEnum.LOCKED.code(), updatedAt);
 
         if (updateCount != 1) {

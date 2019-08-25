@@ -27,7 +27,12 @@ public class BlogDetailVO extends BlogVO {
         blogDetailVO.setDescription(blogDTO.getDescription());
         blogDetailVO.setContent(blogDTO.getContent());
         blogDetailVO.setTags(blogDTO.getTags());
-        blogDetailVO.setDate(blogDTO.getPublishedAt());
+
+        if (blogDTO.getPublishedAt() != null) {
+            blogDetailVO.setDate(blogDTO.getPublishedAt());
+        } else {
+            blogDetailVO.setDate(blogDTO.getCreatedAt());
+        }
 
         return blogDetailVO;
     }

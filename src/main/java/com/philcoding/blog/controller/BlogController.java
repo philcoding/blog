@@ -1,5 +1,6 @@
 package com.philcoding.blog.controller;
 
+import com.philcoding.blog.model.Result;
 import com.philcoding.blog.model.blog.BlogDTO;
 import com.philcoding.blog.model.blog.BlogDetailVO;
 import com.philcoding.blog.model.blog.BlogListVO;
@@ -59,31 +60,31 @@ public class BlogController {
 
     @PostMapping(path = "")
     @ResponseBody
-    public ResponseEntity<BlogDTO> create(@RequestBody @Validated CreateQuery createQuery) {
+    public Result create(@RequestBody @Validated CreateQuery createQuery) {
 
         BlogDTO blogDTO = BlogDTO.from(createQuery);
 
         blogDTO = blogService.create(blogDTO);
 
-        return ResponseEntity.ok(blogDTO);
+        return Result.success(BlogDetailVO.from(blogDTO));
     }
 
     @PutMapping(path = "/{blog_id}")
     @ResponseBody
-    public ResponseEntity<BlogDTO> update(@PathVariable("blog_id") Long blogId,
-                                          @RequestBody @Validated CreateQuery createQuery) {
+    public Result update(@PathVariable("blog_id") Long blogId,
+                                  @RequestBody @Validated CreateQuery createQuery) {
 
         BlogDTO blogDTO = BlogDTO.from(createQuery);
         blogDTO.setBlogId(blogId);
 
         blogDTO = blogService.update(blogDTO);
 
-        return ResponseEntity.ok(blogDTO);
+        return Result.success(BlogDetailVO.from(blogDTO));
     }
 
     @DeleteMapping(path = "/{blog_id}")
     @ResponseBody
-    public ResponseEntity<BlogDTO> delete(@PathVariable("blog_id") Long blogId) {
+    public ResponseEntity delete(@PathVariable("blog_id") Long blogId) {
 
         blogService.delete(blogId);
 
