@@ -2,6 +2,7 @@ package com.philcoding.blog.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.philcoding.blog.enums.ResultCodeEnum;
+import com.philcoding.blog.util.IdUtil;
 
 import java.util.Date;
 
@@ -23,6 +24,11 @@ public class Result<T> {
     private String message;
 
     /**
+     * 链路跟踪标识
+     */
+    private String traceId;
+
+    /**
      * 响应时间
      */
     private Date timestamp;
@@ -30,85 +36,82 @@ public class Result<T> {
     /**
      * 响应数据
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public Result() {
         this.timestamp = new Date();
+        this.traceId = String.valueOf(IdUtil.nextId());
     }
 
     public static Result success() {
-        return new Result()
-                .setCode(ResultCodeEnum.SUCCESS.code())
-                .setSuccess(true)
-                .setMessage(ResultCodeEnum.SUCCESS.message());
+        Result result = new Result();
+        result.setCode(ResultCodeEnum.SUCCESS.code());
+        result.setSuccess(true);
+        result.setMessage(ResultCodeEnum.SUCCESS.message());
+
+        return result;
     }
 
     public static <T> Result success(T data) {
-        return new Result<T>()
-                .setCode(ResultCodeEnum.SUCCESS.code())
-                .setSuccess(true)
-                .setMessage(ResultCodeEnum.SUCCESS.message())
-                .setData(data);
+
+        Result<T> result = new Result<>();
+        result.setCode(ResultCodeEnum.SUCCESS.code());
+        result.setSuccess(true);
+        result.setMessage(ResultCodeEnum.SUCCESS.message());
+        result.setData(data);
+
+        return result;
     }
 
     public static Result fail(String message) {
-        return new Result()
-                .setCode(ResultCodeEnum.FAIL.code())
-                .setSuccess(false)
-                .setMessage(message);
+
+        Result result = new Result();
+        result.setCode(ResultCodeEnum.FAIL.code());
+        result.setSuccess(false);
+        result.setMessage(message);
+
+        return result;
     }
 
     public static Result fail(int code, String message) {
-        return new Result()
-                .setCode(code)
-                .setSuccess(false)
-                .setMessage(message);
+        Result result = new Result();
+        result.setCode(code);
+        result.setSuccess(false);
+        result.setMessage(message);
+
+        return result;
     }
 
     public int getCode() {
         return code;
     }
 
-    public Result setCode(int code) {
+    public void setCode(int code) {
         this.code = code;
-        return this;
     }
 
     public boolean isSuccess() {
         return success;
     }
 
-    public Result setSuccess(boolean success) {
+    public void setSuccess(boolean success) {
         this.success = success;
-        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public Result setMessage(String message) {
+    public void setMessage(String message) {
         this.message = message;
-        return this;
-    }
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public Result setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-        return this;
     }
 
     public T getData() {
         return data;
     }
 
-    public Result setData(T data) {
+    public void setData(T data) {
         this.data = data;
-        return this;
     }
 
     @Override
