@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot 自定义异常页面</title>
+</head>
+<body>
+<div>
+    <div id="navbar">
+        <h1>系统异常统一处理</h1>
+        <!--/*@thymesVar id="message" type="java"*/-->
+        <h3 th:text="'错误信息：'+${message}"></h3>
+        <!--/*@thymesVar id="path" type="java"*/-->
+        <h3 th:text="'请求地址：'+${path}"></h3>
+    </div>
+</div>
+</body>
+</html>

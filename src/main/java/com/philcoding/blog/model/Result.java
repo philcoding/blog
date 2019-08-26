@@ -1,9 +1,12 @@
 package com.philcoding.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.philcoding.blog.enums.ResultCodeEnum;
 import com.philcoding.blog.util.IdUtil;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Result<T> {
 
@@ -35,20 +38,12 @@ public class Result<T> {
     /**
      * 响应数据
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public Result() {
         this.timestamp = new Date();
         this.traceId = String.valueOf(IdUtil.nextId());
-    }
-
-    public static Result success() {
-        Result result = new Result();
-        result.setCode(ResultCodeEnum.SUCCESS.code());
-        result.setSuccess(true);
-        result.setMessage(ResultCodeEnum.SUCCESS.message());
-
-        return result;
     }
 
     public static <T> Result success(T data) {
@@ -66,7 +61,6 @@ public class Result<T> {
 
         Result result = new Result();
         result.setCode(ResultCodeEnum.FAIL.code());
-        result.setSuccess(false);
         result.setMessage(message);
 
         return result;
@@ -75,10 +69,23 @@ public class Result<T> {
     public static Result fail(int code, String message) {
         Result result = new Result();
         result.setCode(code);
-        result.setSuccess(false);
         result.setMessage(message);
 
         return result;
+    }
+
+    public static Map<String, Object> fail(Map<String, Object> model) {
+
+        Result result = new Result();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("code", model.get("status"));
+        body.put("message", model.get("message"));
+        body.put("success", false);
+        body.put("timestamp", result.getTimestamp());
+        body.put("traceId", result.getTraceId());
+
+        return body;
     }
 
     public int getCode() {
@@ -111,6 +118,14 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 
     @Override
