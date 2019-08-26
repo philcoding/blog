@@ -1,6 +1,5 @@
 package com.philcoding.blog.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.philcoding.blog.enums.ResultCodeEnum;
 import com.philcoding.blog.util.IdUtil;
 
