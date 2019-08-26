@@ -105,7 +105,7 @@ public class BlogServiceImpl implements BlogService {
         blogEntity.setKeywords(blogDTO.getKeywords());
         blogEntity.setDescription(blogDTO.getDescription());
         blogEntity.setTags(tags);
-        blogEntity.setStatus(StatusEnum.UNPUBLISHED.code());
+        blogEntity.setStatus(StatusEnum.DRAFT.code());
         blogEntity.setCreatedAt(date);
         blogEntity.setUpdatedAt(date);
         blogEntity.setArticleId(articleDTO.getId());
@@ -160,7 +160,7 @@ public class BlogServiceImpl implements BlogService {
     public void delete(Long blogId) {
 
         long updatedAt = Instant.now().toEpochMilli();
-        int updateCount = blogRepository.lock(blogId, StatusEnum.LOCKED.code(), updatedAt);
+        int updateCount = blogRepository.updateStatus(blogId, StatusEnum.DELETED.code(), updatedAt);
 
         if (updateCount != 1) {
             throw new DeteleFailureException();
@@ -181,10 +181,10 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
-    public void unpublish(Long blogId) {
+    public void draft(Long blogId) {
 
         long updatedAt = Instant.now().toEpochMilli();
-        int updateCount = blogRepository.unpublish(blogId, StatusEnum.UNPUBLISHED.code(), updatedAt);
+        int updateCount = blogRepository.updateStatus(blogId, StatusEnum.DRAFT.code(), updatedAt);
 
         if (updateCount != 1) {
             throw new UpdateFailureException(ResultCodeEnum.BLOG_UNPUBLISH_UPDATE_ERROR);

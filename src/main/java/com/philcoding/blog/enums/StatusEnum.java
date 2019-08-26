@@ -1,9 +1,9 @@
 package com.philcoding.blog.enums;
 
 public enum StatusEnum {
-    UNPUBLISHED(0, "未发布"),
+    DRAFT(0, "草稿"),
     PUBLISHED(1, "已发布"),
-    LOCKED(2, "已锁定");
+    DELETED(2, "已删除");
 
     private final int code;
 

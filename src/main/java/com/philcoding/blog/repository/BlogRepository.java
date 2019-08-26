@@ -17,17 +17,11 @@ public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 
     @Modifying
     @Query("UPDATE BlogEntity b SET b.status =:status, updated_at =:updatedAt WHERE b.id =:blogId")
-    int lock(long blogId, int status, long updatedAt);
+    int updateStatus(long blogId, int status, long updatedAt);
 
     @Modifying
     @Query("UPDATE BlogEntity b " +
             "SET b.status =:status, updated_at =:publishedAt, published_at =:publishedAt " +
             "WHERE b.id =:blogId")
     int publish(long blogId, int status, long publishedAt);
-
-    @Modifying
-    @Query("UPDATE BlogEntity b " +
-            "SET b.status =:status, updated_at =:updatedAt, published_at = 0 " +
-            "WHERE b.id =:blogId")
-    int unpublish(long blogId, int status, long updatedAt);
 }

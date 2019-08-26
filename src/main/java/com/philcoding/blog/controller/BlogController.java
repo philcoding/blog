@@ -100,11 +100,11 @@ public class BlogController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(path = "/{blog_id}/unpublish")
+    @PutMapping(path = "/{blog_id}/draft")
     @ResponseBody
-    public ResponseEntity unpublish(@PathVariable("blog_id") Long blogId) {
+    public ResponseEntity draft(@PathVariable("blog_id") Long blogId) {
 
-        blogService.unpublish(blogId);
+        blogService.draft(blogId);
 
         return ResponseEntity.noContent().build();
     }

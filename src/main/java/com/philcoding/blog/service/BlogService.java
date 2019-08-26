@@ -21,5 +21,5 @@ public interface BlogService {
 
     void publish(Long blogId);
 
-    void unpublish(Long blogId);
+    void draft(Long blogId);
 }
