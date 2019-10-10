@@ -36,7 +36,7 @@ public class ByteUtil {
     public static String toHexString(byte b) {
         int hi = (b & 0xf0) >> 4;
         int lo = b & 0x0f;
-        char[] cs = { HEX_CHARS[hi], HEX_CHARS[lo] };
+        char[] cs = {HEX_CHARS[hi], HEX_CHARS[lo]};
         return new String(cs);
     }
 

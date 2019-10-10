@@ -47,4 +47,4 @@ logging:
   level:
     root: info
     com:
-      philcode: debug
+      philcoding: debug
